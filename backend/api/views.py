@@ -1,19 +1,13 @@
 from django.http import JsonResponse, HttpResponse
+import json
 from products.models import Product
 
-def api_home(request, *args, **kwargs):
-    body = request.body.decode('utf-8')
+def api_home(request, *args, **kwargs): 
+    model_data = Product.objects.all().order_by('?').first()
     data = {}
-    try:
-        data = json.loads(body)
-        data = data['content']
-    except:
-        print('not working')
-
-    print(data)
-    print(request.GET)
-    print(request.POST)
-    print(request.headers)
-    
+    if model_data:
+        data['title'] = model_data.title
+        data['content'] = model_data.content
+        data['price'] = model_data.price
     return JsonResponse(data)
 
